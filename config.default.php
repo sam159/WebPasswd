@@ -7,10 +7,10 @@ return array(
     'Path' => '/',
     'Domain' => $_SERVER['HTTP_HOST']
   ),
-  'SSLOnly' => false,
+  'SSLOnly' => true,
   'Auth' => array(
       'Username' => 'sam',
       'SessionName' => 'auth'
   ),
-  'PasswdFile' => 'test.txt'
+  'PasswdFile' => '#####' //Somewhere not accessible from the internet, ie your home dir /home/mysite/passwords
 );

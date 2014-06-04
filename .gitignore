@@ -1,2 +1,3 @@
 /.idea
 /templates/compiled/*.template.php
+/config.php
