@@ -33,6 +33,9 @@ class PasswdBook implements ArrayAccess, IteratorAggregate, SplObserver {
   function hasChanged() {
     return $this->changed;
   }
+  function markChanged() {
+    $this->changed = true;
+  }
 
   function add(Passwd $passwd) {
     $this->entries[] = $passwd;
@@ -105,7 +108,7 @@ class PasswdBook implements ArrayAccess, IteratorAggregate, SplObserver {
   }
 
   public function update(SplSubject $subject) {
-    $this->changed = true;
+    $this->markChanged();
     $this->sortEntries();
   }
 }

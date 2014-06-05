@@ -22,21 +22,23 @@ class Auth {
   }
 
   function saveState() {
-    $this->getPasswdBook();
+    $passwdBook = $this->getPasswdBook();
 
     if (   $this->isLoggedIn()
-        && $this->passwdBook instanceof PasswdBook
-        && $this->passwdBook->hasChanged()) {
+        && $passwdBook instanceof PasswdBook
+        && $passwdBook->hasChanged()) {
       $crypt = new Crypt($this->bookFile, $this->password);
-      $data = (string)$this->getPasswdBook();
+      $data = (string)$passwdBook;
       $result = $crypt->Encrypt($data);
       if ($result == false) {
-        trigger_error("Crypt Failed. Could not save passwords", E_USER_WARNING);
+        trigger_error("Crypt Failed. Could not save passwords file", E_USER_WARNING);
+        return false;
       }
     }
 
     $_SESSION[$this->sessionName]['loggedin'] = $this->loggedin;
     $_SESSION[$this->sessionName]['password'] = $this->password;
+    return true;
   }
 
   function tryLogin($username, $password) {
@@ -79,13 +81,33 @@ class Auth {
     $this->password = null;
     $this->saveState();
   }
+
   function isLoggedIn() {
     return $this->loggedin;
   }
+
   function requireLoggedIn() {
     if (!$this->isLoggedIn()) {
       throw new NotAuthorisedException("Login Required");
     }
+  }
+
+  function updatePassword($current, $new) {
+
+    if (!$this->isLoggedIn()) {
+      throw new NotAuthorisedException("Login Required");
+    }
+
+    if (strcmp($current, $this->password) !== 0) {
+      return false;
+    }
+    if (empty($new) || strlen($new) < 6) {
+      return false;
+    }
+
+    $this->getPasswdBook()->markChanged();
+    $this->password = $new;
+    return $this->saveState();
   }
 
   /**
