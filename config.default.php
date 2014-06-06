@@ -9,8 +9,9 @@ return array(
   ),
   'SSLOnly' => true,
   'Auth' => array(
-      'Username' => 'sam',
+      'Username' => '#####', //Pick a username to login with
       'SessionName' => 'auth'
   ),
-  'PasswdFile' => '#####' //Somewhere not accessible from the internet, ie your home dir /home/mysite/passwords
+  'PasswdFile' => '#####', //Somewhere not accessible from the internet, ie your home dir /home/mysite/passwords
+  'Debug' => false
 );

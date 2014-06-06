@@ -1,61 +1,10 @@
 <?php
 
-define('BASE_DIR',      dirname(__FILE__));
-define('DS',            DIRECTORY_SEPARATOR);
-define('DIR_TEMPLATES', BASE_DIR.DS.'templates');
-define('DIR_TEMPLATES_COMPILED', DIR_TEMPLATES.DS.'compiled');
-define('DIR_CLASSES',   BASE_DIR.DS.'classes');
-chdir(BASE_DIR);
+require 'include.php';
 
-require 'functions.php';
-
-$config = require 'config.php';
-
-if ($config['SSLOnly'] && @$_SERVER['HTTPS'] != 'on') {
-  redirect('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+if (!is_file($config['PasswdFile'])) {
+  redirect(base_href().'install.php');
 }
-
-//Start the session
-session_set_cookie_params(
-    $config['Session']['Timeout'],
-    $config['Session']['Path'],
-    $config['Session']['Domain'],
-    $config['SSLOnly'] ? true : false,
-    true);
-ini_set('session.gc_maxlifetime', $config['Session']['Timeout']);
-session_name('WebPasswd_SID');
-session_start() or die('Failed to start session');
-
-remove_flashdata();
-
-header('Cache-Control: no-store, no-cache. must-revalidate, pre-check=0');
-header('Pragma: private');
-header('Expires: '.gmdate('D, d M Y H:i:s T', strtotime('-10 years')));
-
-//Insert autoloader
-spl_autoload_register(function($class) {
-  $class = str_replace('_', DS, $class);
-  $file = DIR_CLASSES.DS.$class.'.php';
-
-  if (file_exists($file)) {
-    include $file;
-  }
-});
-
-//Check MCrypt support
-
-if (!function_exists('mcrypt_generic')) {
-  die("MCrypt support required");
-}
-if (array_search(Crypt::CYPHER, mcrypt_list_algorithms()) === false ) {
-  die('MCrypt does not support required cypher '.Crypt::CYPHER);
-}
-
-//Start Auth
-$auth = new Auth($config);
-/*register_shutdown_function(function() use($auth) {
-  $auth->saveState();
-});*/
 
 //Determine action
 $action = 'Default';
@@ -78,13 +27,13 @@ try {
   } else {
     throw new NotFoundException("Unknown/Invalid Action");
   }
-} catch (NotFoundException $ex) {
+} catch (NotFoundException $ex) { //404 Not Found Error
   while(ob_get_level() > 0) {ob_end_clean();}
-  http_response_code(404);
 
+  http_response_code(404);
   echo Template::GetInstance()->Render('error/404', array('ex'=>$ex,'message' => $ex->getMessage()));
 
-} catch (NotAuthorisedException $ex) {
+} catch (NotAuthorisedException $ex) { //403 Not authorised -- redirect to login
 
   if ($auth->isLoggedIn() == false) {
     redirect(action_url('Login'));
@@ -94,7 +43,7 @@ try {
   http_response_code(403);
   echo Template::GetInstance()->Render('error/403', array('ex'=>$ex,'message' => $ex->getMessage()));
 
-} catch (Exception $ex) {
+} catch (Exception $ex) { //500 Internal Server Error - Someone went wrong :s
   while(ob_get_level() > 0) {ob_end_clean();}
 
   http_response_code(500);

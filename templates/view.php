@@ -17,7 +17,10 @@
 </div>
 
 {% if ($saved): %}
-<p>Changes Saved</p>
+<div data-alert class="alert-box info">
+  Changes Saved
+  <a href="#" class="close">&times;</a>
+</div>
 {% endif %}
 
 <form action="{{action_url('View','domain='.urlencode($passwd->getDomain()))}}" method="POST">
