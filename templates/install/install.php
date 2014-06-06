@@ -17,6 +17,13 @@
 </div>
 {% endif %}
 
+{% if ($message): %}
+<div data-alert class="alert-box alert {{$message['style']}}">
+  {{$message['text']}}
+  <a href="#" class="close">&times;</a>
+</div>
+{% endif %}
+
 <h2>Install WebPasswd</h2>
 
 <div class="row">
