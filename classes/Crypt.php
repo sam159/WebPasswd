@@ -98,7 +98,7 @@ final class Crypt {
     $td = mcrypt_module_open(self::CYPHER, '', self::CYPHER_MODE, '');
 
     //Generate our IV and key
-    $iv = mcrypt_create_iv(mcrypt_enc_get_iv_size($td));
+    $iv = mcrypt_create_iv(mcrypt_enc_get_iv_size($td), MCRYPT_DEV_URANDOM);
     $key = pbkdf2(self::KEY_HASH, $this->password, $iv, self::KEY_HASH_ROUNDS, mcrypt_enc_get_key_size($td), true);
 
     //Generate the MAC for the given data
