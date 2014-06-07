@@ -4,6 +4,8 @@ class Action_Login extends Action {
 
   function __invoke() {
 
+    keep_flashdata('redirect_to');
+
     $username = "";
     $message = false;
 
@@ -12,7 +14,11 @@ class Action_Login extends Action {
       $password = filter_input(INPUT_POST, 'password', FILTER_UNSAFE_RAW);
 
       if ($this->auth->tryLogin($username, $password)) {
-        redirect(action_url());
+        if (isset($_SESSION['redirect_to'])) {
+          redirect(base_href().$_SESSION['redirect_to']);
+        } else {
+          redirect(action_url());
+        }
       } else {
         $message = 'Username or password were not correct';
       }

@@ -36,6 +36,7 @@ try {
 } catch (NotAuthorisedException $ex) { //403 Not authorised -- redirect to login
 
   if ($auth->isLoggedIn() == false) {
+    set_flashdata('redirect_to', $_SERVER['REQUEST_URI']);
     redirect(action_url('Login'));
   }
   while(ob_get_level() > 0) {ob_end_clean();}

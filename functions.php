@@ -58,6 +58,17 @@ function set_flashdata($name, $data) {
 }
 
 /**
+ * Preserves flash data for another page view
+ *
+ * @param string $name
+ */
+function keep_flashdata($name) {
+  if (isset($_SESSION['FLASHDATA']) && isset($_SESSION['FLASHDATA'][$name])) {
+    $_SESSION['FLASHDATA'][$name] ++;
+  }
+}
+
+/**
  * Remove all flash data that has been through one page view already
  *
  * @return void
