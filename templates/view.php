@@ -46,7 +46,7 @@
     </div>
     <div class="large-6 columns">
       <label>Password
-        <input type="password" id="field-password" name="password" value="{{$passwd->getPassword()}}" placeholder="Password"/>
+        <input type="password" autocomplete="off" id="field-password" name="password" value="{{$passwd->getPassword()}}" placeholder="Password"/>
       </label>
     </div>
   </div>
