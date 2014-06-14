@@ -15,7 +15,7 @@ class Action_Login extends Action {
 
       if ($this->auth->tryLogin($username, $password)) {
         if (isset($_SESSION['redirect_to'])) {
-          redirect(base_href().$_SESSION['redirect_to']);
+          redirect($_SESSION['redirect_to']);
         } else {
           redirect(action_url());
         }
