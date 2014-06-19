@@ -33,7 +33,7 @@ Make use of the bookmarklet, it will allow you to quickly access/create the pass
 Encryption
 ----------
 
-The encryption is done via [mcrypt][2] using the Rijndael 256 algorithm (otherwise known as AES) using the CBC mode (Chain block cypher)
+The encryption is done via [mcrypt][2] using the Rijndael 256 algorithm (otherwise known as AES) using the CBC mode (cipher-block chaining).
 
 The encryption key is derived from your password and a once use IV using the [PBKDF2][1] algorithm.  
 A MAC via [HMAC][3]/SHA-256 is also used to verify the content on decryption.
