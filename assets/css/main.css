@@ -7,3 +7,10 @@
 #settings-button img {
     vertical-align: middle;
 }
+.password-label {
+    transition: 3s all;
+}
+.password-updated {
+    background-color: #43ac6a;
+    color: white;
+}

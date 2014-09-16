@@ -1,3 +1,4 @@
 /.idea
 /templates/compiled/*.template.php
 /config.php
+/test.txt

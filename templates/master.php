@@ -21,8 +21,11 @@
   </div>
 
   <script src="assets/js/jquery-2.1.1.min.js"></script>
-  <script src="assets/js/main.js"></script>
   <script src="assets/js/foundation.min.js"></script>
+  <script src="assets/js/vendor/fastclick.js"></script>
+  <script src="assets/js/rng.js"></script>
+  <script src="assets/js/main.js" rng-seed="{{ base64_encode(mcrypt_create_iv(16,MCRYPT_DEV_URANDOM)); }}"></script>
+  {{t GetSection('script') }}
   <script>
     $(document).foundation();
   </script>
