@@ -1,17 +1,18 @@
 <?php
 
 if (!function_exists('http_response_code')) {
-  function http_response_code($response_code) {
-    header(':', true, $response_code);
-  }
+    function http_response_code($response_code) {
+        header(':', true, $response_code);
+    }
 }
 
 /**
  * Detects if the request method is post
+ *
  * @return boolean
  */
 function is_post() {
-  return $_SERVER['REQUEST_METHOD'] == "POST";
+    return $_SERVER['REQUEST_METHOD'] == "POST";
 }
 
 /**
@@ -20,13 +21,14 @@ function is_post() {
  * @param string $url the url to redirect to
  */
 function redirect($url) {
-  //Can't redirect the console
-  if (php_sapi_name() == 'cli')
-    return;
+    //Can't redirect the console
+    if (php_sapi_name() == 'cli') {
+        return;
+    }
 
-  header("Location: $url");
+    header("Location: $url");
 
-  echo <<<EOT
+    echo <<<EOT
 <html>
   <head>
       <title>Redirecting</title>
@@ -38,23 +40,25 @@ function redirect($url) {
 </html>
 EOT;
 
-  exit;
+    exit;
 }
 
 /**
  * Stores a key the session for one page view
  *
  * @see remove_flashdata
+ *
  * @param string $name
  * @param mixed $data
  */
 function set_flashdata($name, $data) {
-  if (!isset($_SESSION['FLASHDATA']))
-    $_SESSION['FLASHDATA'] = array($name => 1);
-  else
-    $_SESSION['FLASHDATA'][$name] = 1;
+    if (!isset($_SESSION['FLASHDATA'])) {
+        $_SESSION['FLASHDATA'] = array($name => 1);
+    } else {
+        $_SESSION['FLASHDATA'][$name] = 1;
+    }
 
-  $_SESSION[$name] = $data;
+    $_SESSION[$name] = $data;
 }
 
 /**
@@ -63,9 +67,9 @@ function set_flashdata($name, $data) {
  * @param string $name
  */
 function keep_flashdata($name) {
-  if (isset($_SESSION['FLASHDATA']) && isset($_SESSION['FLASHDATA'][$name])) {
-    $_SESSION['FLASHDATA'][$name] ++;
-  }
+    if (isset($_SESSION['FLASHDATA']) && isset($_SESSION['FLASHDATA'][$name])) {
+        $_SESSION['FLASHDATA'][$name]++;
+    }
 }
 
 /**
@@ -74,30 +78,39 @@ function keep_flashdata($name) {
  * @return void
  */
 function remove_flashdata() {
-  if (isset($_SESSION['FLASHDATA'])) {
-    foreach ($_SESSION['FLASHDATA'] as $name => $views) {
-      if ($_SESSION['FLASHDATA'][$name] == 0) {
-        unset($_SESSION[$name]);
-        unset($_SESSION['FLASHDATA'][$name]);
-      }
-      else
-        $_SESSION['FLASHDATA'][$name] -= 1;
+    if (isset($_SESSION['FLASHDATA'])) {
+        foreach ($_SESSION['FLASHDATA'] as $name => $views) {
+            if ($_SESSION['FLASHDATA'][$name] == 0) {
+                unset($_SESSION[$name]);
+                unset($_SESSION['FLASHDATA'][$name]);
+            } else {
+                $_SESSION['FLASHDATA'][$name] -= 1;
+            }
+        }
     }
-  }
 }
 
 function is_https() {
-  return isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on';
+    return isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on';
 }
 
-function action_url($action='Default', $append='') {
-  global $config;
+function action_url($action = 'Default', $append = '') {
+    global $config, $auth;
 
-  return $config['Path'].'?action='.$action.($append!=''?'&':'').$append;
+    $key = $auth->getSessionKey();
+
+    if (PHP_SAPI == 'cli-server') {
+        return $config['Path'] . '?skey=' . $key .'&action='. $action . ($append != '' ? '&' : '') . $append;
+    } else {
+        if ($auth->isLoggedIn()) {
+            $key .= '/';
+        }
+        return $config['Path'] . $key . $action . ($append != '' ? '?' : '') . $append;
+    }
 }
 
 function base_href() {
-  global $config;
+    global $config;
 
-  return (is_https()?'https':'http').'://'.$_SERVER['HTTP_HOST'].$config['Path'];
+    return (is_https() ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $config['Path'];
 }

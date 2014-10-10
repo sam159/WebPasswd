@@ -11,7 +11,7 @@
 <ul id="domain-list">
   {% foreach($book as $passwd): %}
   <li>
-    <a href="{{action_url('View')}}&domain={{urlencode($passwd->getDomain())}}">
+    <a href="{{action_url('View', 'domain='.urlencode($passwd->getDomain()))}}">
       {{$passwd->getDomain()}}
     </a>
   </li>

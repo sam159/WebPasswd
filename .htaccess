@@ -1,0 +1,24 @@
+# Created by http://htaccessbuilder.com/
+# Fri, 10th October 2014
+<IfModule mod_rewrite.c>
+
+# Enable Rewrite Engine
+RewriteEngine On
+RewriteBase /
+
+# Redirect index.php to /
+RewriteCond %{QUERY_STRING} ^$
+RewriteCond %{REQUEST_METHOD} !^POST$
+RewriteRule ^index\.php$ / [R=301,L]
+
+# Map urls to index.php (w/session key)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-z0-9]+)/([a-zA-Z0-9]+)$ index.php?skey=$1&action=$2 [L,QSA]
+
+# Map urls to index.php (wo/session key)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-zA-Z0-9]+)$ index.php?action=$1 [L,QSA]
+
+</IfModule>
