@@ -114,3 +114,14 @@ function base_href() {
 
     return (is_https() ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $config['Path'];
 }
+
+function gen_random_string() {
+    $strong = false;
+    if (function_exists('openssl_random_pseudo_bytes') &&
+        ($str = openssl_random_pseudo_bytes(16, $strong)) != false &&
+        $strong == true) {
+        return sha1($str);
+    } else {
+        return sha1(mcrypt_create_iv(16, MCRYPT_DEV_URANDOM));
+    }
+}

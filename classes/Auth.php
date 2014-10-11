@@ -79,7 +79,7 @@ class Auth {
         $this->password = $password;
         $this->loggedin = true;
         $this->passwdBook = $book;
-        $this->sessionKey = hash('sha1', uniqid());
+        $this->sessionKey = gen_random_string();
 
         $this->saveState();
 
