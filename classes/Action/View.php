@@ -44,6 +44,6 @@ class Action_View extends Action {
 
     set_flashdata('saved', true);
 
-    redirect(action_url('View').'&domain='.urlencode($passwd->getDomain()));
+    redirect(action_url('View','domain='.urlencode($passwd->getDomain())));
   }
 }
